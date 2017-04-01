@@ -49,6 +49,12 @@ class Question
      */
     private $answer;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Quiz", inversedBy="questions")
+     * @ORM\JoinColumn(name="question_id", referencedColumnName="id")
+     */
+    private $quiz;
+
     public static function createWithFields($number_one, $number_two, $operator, $answer) {
         $question = new self;
 
@@ -167,5 +173,21 @@ class Question
     public function getAnswer()
     {
         return $this->answer;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQuiz()
+    {
+        return $this->quiz;
+    }
+
+    /**
+     * @param mixed $quiz
+     */
+    public function setQuiz($quiz)
+    {
+        $this->quiz = $quiz;
     }
 }

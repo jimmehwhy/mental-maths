@@ -2,6 +2,7 @@
 
 namespace Why\MentalMathsBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,7 +25,7 @@ class Quiz
     /**
      * @var string
      *
-     * @ORM\Column(name="questions", type="string", length=255)
+     * @ORM\OneToMany(targetEntity="Question", mappedBy="quiz")
      */
     private $questions;
 
@@ -49,6 +50,9 @@ class Quiz
      */
     private $answers;
 
+    public function __construct() {
+        $this->questions = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -74,9 +78,17 @@ class Quiz
     }
 
     /**
+     * @param Question $question
+     */
+    public function addQuestion($question){
+        $question->setQuiz($this);
+        $this->questions[] = $question;
+    }
+
+    /**
      * Get questions
      *
-     * @return string 
+     * @return ArrayCollection
      */
     public function getQuestions()
     {
@@ -150,5 +162,13 @@ class Quiz
     public function getAnswers()
     {
         return $this->answers;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuestionCount()
+    {
+        return $this->questions->count();
     }
 }

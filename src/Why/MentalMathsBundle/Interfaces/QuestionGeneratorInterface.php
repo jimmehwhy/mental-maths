@@ -15,7 +15,9 @@ interface QuestionGeneratorInterface
 {
     /**
      * @param Integer $max maximum value of a question
+     * @param null $set_value
+     *
      * @return Question
      */
-    public function generateQuestion($max);
+    public function generateQuestion($max, $set_value = null);
 }
