@@ -1,0 +1,19 @@
+default:
+  suites:
+    default:
+      contexts:
+        - FeatureContext:
+          session:   '@session'
+        - Knp\FriendlyContexts\Context\MinkContext
+        - Knp\FriendlyContexts\Context\TableContext
+        - Knp\FriendlyContexts\Context\EntityContext
+        - Knp\FriendlyContexts\Context\AliceContext
+
+  extensions:
+    Behat\Symfony2Extension:
+    Knp\FriendlyContexts\Extension: ~
+    Knp\FriendlyContexts\Extension:
+      alice:
+        fixtures:
+            User: src\AppBundle\DataFixtures\ORM\beings.yml
+        dependencies: ~

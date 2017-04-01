@@ -1,0 +1,3 @@
+why_mental_maths_homepage:
+    path:     /
+    defaults: { _controller: WhyMentalMathsBundle:Default:index }

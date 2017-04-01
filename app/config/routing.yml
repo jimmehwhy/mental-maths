@@ -1,0 +1,7 @@
+why_mental_maths:
+    resource: "@WhyMentalMathsBundle/Resources/config/routing.yml"
+    prefix:   /
+
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation
