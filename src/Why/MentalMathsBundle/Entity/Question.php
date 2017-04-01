@@ -49,6 +49,23 @@ class Question
      */
     private $answer;
 
+    public static function createWithFields($number_one, $number_two, $operator, $answer) {
+        $question = new self;
+
+        $question->setFieldOne($number_one);
+        $question->setFieldTwo($number_two);
+        $question->setOperator($operator);
+        $question->setAnswer($answer);
+
+        return $question;
+    }
+
+    /**
+     * @return string
+     */
+    public function toString() {
+        return $this->fieldOne . " " . $this->operator . " " . $this->fieldTwo . " = " . $this->answer;
+    }
 
     /**
      * Get id
