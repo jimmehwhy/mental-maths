@@ -23,8 +23,6 @@ class Quiz
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\OneToMany(targetEntity="Question", mappedBy="quiz")
      */
     private $questions;
@@ -44,14 +42,20 @@ class Quiz
     private $user;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="answers", type="string", length=255)
+     * @ORM\OneToMany(targetEntity="Answer", mappedBy="quiz")
      */
     private $answers;
 
+    /**
+     * @var Integer
+     */
+    private $current_question;
+
     public function __construct() {
         $this->questions = new ArrayCollection();
+        $this->answers = new ArrayCollection();
+
+        $this->current_question = 0;
     }
 
     /**
@@ -65,14 +69,38 @@ class Quiz
     }
 
     /**
+     * @return Question
+     */
+    public function getCurrentQuestion()
+    {
+        return $this->current_question <= $this->questions->count() ?
+            $this->questions[$this->current_question] :
+            null ;
+    }
+
+    /**
+     * @param Integer $answer
+     * @param Float $time
+     */
+    public function answerCurrentQuestion($answer, $time)
+    {
+        $this->answers->get($this->current_question)
+            ->setAnswer($answer)
+            ->setTime($time);
+        $this->current_question++;
+    }
+
+    /**
      * Set questions
      *
-     * @param string $questions
+     * @param [] $questions
      * @return Quiz
      */
     public function setQuestions($questions)
     {
-        $this->questions = $questions;
+        foreach($questions as $question) {
+            $this->addQuestion($question);
+        }
 
         return $this;
     }
@@ -83,6 +111,16 @@ class Quiz
     public function addQuestion($question){
         $question->setQuiz($this);
         $this->questions[] = $question;
+
+        $this->answers[] = new Answer($this);
+    }
+
+    /**
+     * @param Integer $index
+     * @return Question|null
+     */
+    public function getQuestion($index) {
+        return $this->questions->get($index);
     }
 
     /**
@@ -170,5 +208,37 @@ class Quiz
     public function getQuestionCount()
     {
         return $this->questions->count();
+    }
+
+    public function isComplete()
+    {
+        return $this->current_question == $this->getQuestionCount();
+    }
+
+    public function getResults()
+    {
+        $score = 0;
+
+        $results = [];
+
+        /**
+         * @var Answer $answer
+         */
+        foreach($this->answers as $index => $answer) {
+            $correct = $answer->getAnswer() === $this->getQuestion($index)->getAnswer() ? true : false ;
+
+            $results[$index] = [
+                'answer' => $answer->getAnswer(),
+                'actual_answer' => $this->getQuestion($index)->getAnswer(),
+                'correct' => $correct,
+                'speed' => $answer->getTime()
+            ];
+
+            if($correct === true) $score++;
+        }
+
+        $results['score'] = ($score * 100) / $this->questions->count();
+
+        return $results;
     }
 }

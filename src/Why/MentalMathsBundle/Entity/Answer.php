@@ -35,7 +35,20 @@ class Answer
      */
     private $time;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Quiz", inversedBy="questions")
+     * @ORM\JoinColumn(name="answer_id", referencedColumnName="id")
+     */
+    private $quiz;
 
+    /**
+     * Answer constructor.
+     *
+     * @param Quiz $quiz
+     */
+    public function __construct($quiz) {
+        $this->quiz = $quiz;
+    }
     /**
      * Get id
      *
