@@ -24,18 +24,31 @@ class Answer
     /**
      * @var int
      *
-     * @ORM\Column(name="answer", type="integer")
+     * @ORM\Column(name="answer", type="integer", nullable=true)
      */
     private $answer;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="time", type="integer")
+     * @ORM\Column(name="time", type="integer", nullable=true)
      */
     private $time;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Quiz", inversedBy="questions", cascade={"persist"})
+     * @ORM\JoinColumn(name="answer_id", referencedColumnName="id")
+     */
+    private $quiz;
 
+    /**
+     * Answer constructor.
+     *
+     * @param Quiz $quiz
+     */
+    public function __construct($quiz) {
+        $this->quiz = $quiz;
+    }
     /**
      * Get id
      *

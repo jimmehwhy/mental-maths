@@ -49,6 +49,29 @@ class Question
      */
     private $answer;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Quiz", inversedBy="questions", cascade={"persist"})
+     * @ORM\JoinColumn(name="question_id", referencedColumnName="id")
+     */
+    private $quiz;
+
+    public static function createWithFields($number_one, $number_two, $operator, $answer) {
+        $question = new self;
+
+        $question->setFieldOne($number_one);
+        $question->setFieldTwo($number_two);
+        $question->setOperator($operator);
+        $question->setAnswer($answer);
+
+        return $question;
+    }
+
+    /**
+     * @return string
+     */
+    public function toString() {
+        return $this->fieldOne . " " . $this->operator . " " . $this->fieldTwo . " = " . $this->answer;
+    }
 
     /**
      * Get id
@@ -150,5 +173,21 @@ class Question
     public function getAnswer()
     {
         return $this->answer;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQuiz()
+    {
+        return $this->quiz;
+    }
+
+    /**
+     * @param mixed $quiz
+     */
+    public function setQuiz($quiz)
+    {
+        $this->quiz = $quiz;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Why\MentalMathsBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,9 +23,7 @@ class Quiz
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="questions", type="string", length=255)
+     * @ORM\OneToMany(targetEntity="Question", mappedBy="quiz", cascade={"persist"})
      */
     private $questions;
 
@@ -43,12 +42,24 @@ class Quiz
     private $user;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="answers", type="string", length=255)
+     * @ORM\OneToMany(targetEntity="Answer", mappedBy="quiz", cascade={"persist"})
      */
     private $answers;
 
+    /**
+     * @var Integer
+     *
+     * @ORM\Column(name="current_question", type="integer")
+     */
+    private $current_question;
+
+    public function __construct() {
+        $this->questions = new ArrayCollection();
+        $this->answers = new ArrayCollection();
+
+        $this->current_question = 0;
+        $this->setCreated(new \DateTime());
+    }
 
     /**
      * Get id
@@ -61,22 +72,64 @@ class Quiz
     }
 
     /**
+     * @return Question
+     */
+    public function getCurrentQuestion()
+    {
+        return $this->current_question <= $this->questions->count() ?
+            $this->questions[$this->current_question] :
+            null ;
+    }
+
+    /**
+     * @param Integer $answer
+     * @param Float $time
+     */
+    public function answerCurrentQuestion($answer, $time)
+    {
+        $this->answers->get($this->current_question)
+            ->setAnswer($answer)
+            ->setTime($time);
+        $this->current_question++;
+    }
+
+    /**
      * Set questions
      *
-     * @param string $questions
+     * @param [] $questions
      * @return Quiz
      */
     public function setQuestions($questions)
     {
-        $this->questions = $questions;
+        foreach($questions as $question) {
+            $this->addQuestion($question);
+        }
 
         return $this;
     }
 
     /**
+     * @param Question $question
+     */
+    public function addQuestion($question){
+        $question->setQuiz($this);
+        $this->questions[] = $question;
+
+        $this->answers[] = new Answer($this);
+    }
+
+    /**
+     * @param Integer $index
+     * @return Question|null
+     */
+    public function getQuestion($index) {
+        return $this->questions->get($index);
+    }
+
+    /**
      * Get questions
      *
-     * @return string 
+     * @return ArrayCollection
      */
     public function getQuestions()
     {
@@ -150,5 +203,45 @@ class Quiz
     public function getAnswers()
     {
         return $this->answers;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuestionCount()
+    {
+        return $this->questions->count();
+    }
+
+    public function isComplete()
+    {
+        return $this->current_question == $this->getQuestionCount();
+    }
+
+    public function getResults()
+    {
+        $score = 0;
+
+        $results = [];
+
+        /**
+         * @var Answer $answer
+         */
+        foreach($this->answers as $index => $answer) {
+            $correct = $answer->getAnswer() === $this->getQuestion($index)->getAnswer() ? true : false ;
+
+            $results[$index] = [
+                'answer' => $answer->getAnswer(),
+                'actual_answer' => $this->getQuestion($index)->getAnswer(),
+                'correct' => $correct,
+                'speed' => $answer->getTime()
+            ];
+
+            if($correct === true) $score++;
+        }
+
+        $results['score'] = ($score * 100) / $this->questions->count();
+
+        return $results;
     }
 }

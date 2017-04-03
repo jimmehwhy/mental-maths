@@ -14,7 +14,10 @@ use Why\MentalMathsBundle\Entity\Question;
 interface QuestionGeneratorInterface
 {
     /**
+     * @param Integer $max maximum value of a question
+     * @param null $set_value
+     *
      * @return Question
      */
-    public function generateQuestion();
+    public function generateQuestion($max, $set_value = null);
 }

@@ -9,6 +9,9 @@
 namespace Why\MentalMathsBundle\Services;
 
 
+use Why\MentalMathsBundle\Entity\Quiz;
+use Why\MentalMathsBundle\Interfaces\QuestionGeneratorInterface;
+
 class QuizCreatorService
 {
     /**
@@ -16,11 +19,24 @@ class QuizCreatorService
      */
     private $question_generator;
 
-    public function createQuiz(){
-
+    public function __construct(QuestionGeneratorInterface $question_generator) {
+        $this->question_generator = $question_generator;
     }
 
-    private function generateQuestion() {
+    /**
+     * @param $number_of_questions
+     * @param $max_question_value
+     * @param null $set_value
+     *
+     * @return Quiz
+     */
+    public function createQuiz($number_of_questions, $max_question_value, $set_value = null){
+        $quiz = new Quiz;
 
+        while($quiz->getQuestionCount() < $number_of_questions) {
+            $quiz->addQuestion($this->question_generator->generateQuestion($max_question_value, $set_value));
+        }
+
+        return $quiz;
     }
 }
