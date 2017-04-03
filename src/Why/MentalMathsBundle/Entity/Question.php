@@ -50,7 +50,7 @@ class Question
     private $answer;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Quiz", inversedBy="questions")
+     * @ORM\ManyToOne(targetEntity="Quiz", inversedBy="questions", cascade={"persist"})
      * @ORM\JoinColumn(name="question_id", referencedColumnName="id")
      */
     private $quiz;

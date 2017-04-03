@@ -1,0 +1,24 @@
+Quiz Results <br />
+Score {{ results.score }}% <br /> <br />
+
+{% for key, result in results %}
+    {% if key is same as ("score") %}
+    {% else %}
+        Question: {{ key }}
+
+        {% if result.correct == true %}
+            CORRECRT
+        {% else %}
+            INCORRECT
+        {% endif %}
+
+        <br />
+
+        Submitted Answer: {{ result.answer }}
+        Actual Answer: {{ result.actual_answer }}
+        Speed: {{ result.speed }} <br /> <br />
+    {% endif %}
+{% endfor %}
+
+
+

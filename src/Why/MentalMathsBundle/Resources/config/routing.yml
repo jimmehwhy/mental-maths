@@ -1,3 +1,11 @@
 why_mental_maths_homepage:
     path:     /
-    defaults: { _controller: WhyMentalMathsBundle:Default:index }
+    defaults: { _controller: WhyMentalMathsBundle:Quiz:index }
+
+why_mental_maths_quizpage:
+    path:     /quiz/{id}
+    defaults: { _controller: WhyMentalMathsBundle:Quiz:quiz }
+
+why_mental_maths_quiz_complete:
+    path:     /quiz/{id}/results
+    defaults: { _controller: WhyMentalMathsBundle:Quiz:complete }

@@ -24,19 +24,19 @@ class Answer
     /**
      * @var int
      *
-     * @ORM\Column(name="answer", type="integer")
+     * @ORM\Column(name="answer", type="integer", nullable=true)
      */
     private $answer;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="time", type="integer")
+     * @ORM\Column(name="time", type="integer", nullable=true)
      */
     private $time;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Quiz", inversedBy="questions")
+     * @ORM\ManyToOne(targetEntity="Quiz", inversedBy="questions", cascade={"persist"})
      * @ORM\JoinColumn(name="answer_id", referencedColumnName="id")
      */
     private $quiz;

@@ -2,3 +2,10 @@ services:
 #    why_mental_maths.example:
 #        class: Why\MentalMathsBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
+
+  why_mmaths_question_generator:
+    class: Why\MentalMathsBundle\Entity\MentalMathsQuestionGenerator
+
+  why_mmaths_quiz_creator:
+         class: Why\MentalMathsBundle\Services\QuizCreatorService
+         arguments: ["@why_mmaths_question_generator"]

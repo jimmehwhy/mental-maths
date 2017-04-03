@@ -23,7 +23,7 @@ class Quiz
     private $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="Question", mappedBy="quiz")
+     * @ORM\OneToMany(targetEntity="Question", mappedBy="quiz", cascade={"persist"})
      */
     private $questions;
 
@@ -42,12 +42,14 @@ class Quiz
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="Answer", mappedBy="quiz")
+     * @ORM\OneToMany(targetEntity="Answer", mappedBy="quiz", cascade={"persist"})
      */
     private $answers;
 
     /**
      * @var Integer
+     *
+     * @ORM\Column(name="current_question", type="integer")
      */
     private $current_question;
 
@@ -56,6 +58,7 @@ class Quiz
         $this->answers = new ArrayCollection();
 
         $this->current_question = 0;
+        $this->setCreated(new \DateTime());
     }
 
     /**
