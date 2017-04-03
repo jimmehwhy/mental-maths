@@ -1,3 +1,0 @@
-AppBundle\Entity\Being:
-  being_{1..10}:
-    name: <name()>
